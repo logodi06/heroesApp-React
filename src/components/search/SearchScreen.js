@@ -1,9 +1,27 @@
+import { useNavigate, useLocation} from 'react-router-dom';
+import   queryString   from 'query-string';
+
 import { useForm } from "../../hooks/useForm";
+import { getHeroesByName } from "../../selectors/getHeroesByName";
+import { HeroCard } from "../hero/HeroCard";
+import { useMemo } from 'react';
 
 export const SearchScreen = () => {
 
+  //Para la versión 6 de React se  utiliza lo siguiente
+  //Para poder obtener la ruta y poder colocar los parametros a buscar como http://localhost:3000/search?q=batman&casa=dc
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  //Con el queryString lo hace un string y con el parse, lo que hace es separar cada parametro
+  //en un arreglo con las palabras
+  //const query = queryString.parse(location.search);
+  const { q = ''} = queryString.parse(location.search);
+  
+
+
   const initialForm  = {
-    searchText: ''
+    searchText: q
   }
   //desestructuramos el arreglo que regresa  el useForm
   //el  formVaues son los values que regresa el useForm
@@ -13,10 +31,15 @@ export const SearchScreen = () => {
    //Desestructuramos el searchText del  values
   const {searchText} = values;
 
+  //useMemo para que no se llame getHeroes por cada letra si no hasta que cambie el query
+  const heroesFiltered = useMemo( () => getHeroesByName( q ), [q])
+
 
   const handleSearch = (e) => {
     e.preventDefault();
-    console.log(searchText);
+    //console.log(searchText);
+    //con el navigate obtenemos la ruta en la que nos encontramos
+    navigate(`?q=${searchText}`)
   }
 
     return (
@@ -44,6 +67,32 @@ export const SearchScreen = () => {
 
                   <button className="btn btn-outline-primary mt-1" type="submit">Buscar </button>
                 </form>
+              </div>
+              <div className="col-7">
+                  <h4>Resultados:</h4>
+                  <hr />
+
+                  {
+                      (q === '') 
+                        ? <div className='alert alert-info '>Buscar un héroe </div>
+                        : (heroesFiltered.length === 0) 
+                          && <div className="alert alert-danger">No hay resultados: {q}</div> 
+                  }
+
+
+                  {
+                    // Como se hace un return implicito, osea que es lo único que se requiere solo se usa
+                    //los parentesis () y no es necesario {}
+                    heroesFiltered.map( hero => (
+                        <HeroCard 
+                          key={hero.id}
+                          //Como el componente de HeroCard espera los params de id, superhero,publisher, alter_ego, first_appearance, characters
+                          //desestructuramos todos los valores del heroe con {...heroe} para mandarselos a ese
+                          //componente
+                          {...hero}/>
+                    ))
+                  }
+
               </div>
             </div>
       </>
