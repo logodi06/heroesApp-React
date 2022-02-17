@@ -1,11 +1,25 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { AuthContext } from '../../auth/authContext';
+import { types } from '../../types/types';
 
 export const Navbar = () => {
+    //el authContext es el nombre de donde se obtiene la declaración de ese context
+    //user es lo que se extrae del value donde esta el AuthContext.provider, esta en la parte de arriba de la raiz
+    const {user, dispatch} = useContext(AuthContext);
 
     const navigate = useNavigate();
 
     const handleLogout = () => {
+
+        // const action = {
+        //     type: types.logout
+        // }
+
+        // dispatch(action);
+
+        dispatch( { type: types.logout });
+
         // TODO: por hacer
         navigate('/login', {
             replace: true
@@ -61,7 +75,7 @@ export const Navbar = () => {
             <div className="navbar-collapse collapse w-100 order-3 dual-collapse2 d-flex justify-content-end">
                 <ul className="navbar-nav ml-auto">
                     <span className='nav-item nav-link text-info'>
-                        Lorena 
+                        { user.name } 
                     </span>
                     {/* El navlink se cambia por un  boton porque cuando se de click se requiere
                     que la sesión se termine, ya sea borrando lo que esta en el localStorage  */}
