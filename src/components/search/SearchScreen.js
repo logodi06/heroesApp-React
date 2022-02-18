@@ -36,6 +36,7 @@ export const SearchScreen = () => {
 
 
   const handleSearch = (e) => {
+    console.log(searchText);
     e.preventDefault();
     //console.log(searchText);
     //con el navigate obtenemos la ruta en la que nos encontramos
