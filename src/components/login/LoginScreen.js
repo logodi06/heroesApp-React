@@ -24,14 +24,10 @@ export const LoginScreen = () => {
 
     dispatch(action);
 
-    
-
-
     //se lee del localStorage la ultima ruta en la que estaba el usuario
     //al loguearse extrae esa ruta y lo rediecciona, pero si no existe información en el localstorage
     //lo redirecciona a marvel
     const lastPath = localStorage.getItem('lastPath') || '/marvel';
-
 
     navigate(lastPath, {
       replace: true

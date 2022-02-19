@@ -1,6 +1,13 @@
 import { useMemo } from "react";
 import { useParams, Navigate, useNavigate } from "react-router-dom"
+import { heroImages } from "../../helpers/heroImages";
 import { getHeroeById } from "../../selectors/getHeroById";
+
+//import batman from '../../assets/dc-batman.jpg'; //esto sirve para la importación de un recurso (img) estatico
+
+//Para poder llamar las imagenes del assets
+//el true es para que tambien busque en subdirectorios
+//const heroImages = require.context('../../assets',true);
 
 export const HeroScreen = () => {
   ////NAvigate para poder navegar en diferentes páginas
@@ -34,12 +41,16 @@ export const HeroScreen = () => {
 
   const {id,superhero,publisher,alter_ego,first_appearance,characters} = heroe;
  
-  const imagePath = `/assets/${id}.jpg`
+  //const imagePath = `/assets/${id}.jpg`  //desde public/assets
+  
   //console.log(heroe)
     return (
       <div className="row mt-5">
           <div className="col-4"> 
-             <img src={imagePath} alt={superhero} className="img-thumbnail animate__animated animate__fadeInLeft"/>
+             <img 
+             //src={batman}  esto sería para cuano tenemos una importación 
+             src={heroImages(`./${id}.jpg`)}
+             alt={superhero} className="img-thumbnail animate__animated animate__fadeInLeft"/>
           </div>
           <div className="col-8 animate__animated animate__fadeIn">
               <h3>{superhero}</h3>
